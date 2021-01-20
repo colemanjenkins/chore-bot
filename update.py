@@ -3,27 +3,60 @@ import requests
 import datetime
 from datetime import date
 
-if datetime.datetime.today().weekday() == 5:
-    content = "Remember to do your chores this weekend!\n\nBe still, and know that I am God"
+
+def log(msg):
+    print(f"{str(datetime.datetime.now())}: {msg}")
+
+
+test_bot = "7708f26577f448fd1271f9727d"
+production_bot = "b623f516a520ffc3ca3a5aedec"
+
+
+def sendGroupMeMessage(msg, bot):
     url = 'https://api.groupme.com/v3/bots/post'
-    # obj = {"text" : content, "bot_id" : "b623f516a520ffc3ca3a5aedec"}
-    obj = {"text" : content, "bot_id" : "b623f516a520ffc3ca3a5aedec"}
-    x = requests.post(url, data = obj)
-    exit()
+    # TEST!!
+    # obj = {"text": msg, "bot_id": bot}
+    obj = {"text": msg, "bot_id": test_bot}
+    x = requests.post(url, data=obj)
 
-if datetime.datetime.today().weekday() == 3:
-    print("yep")
 
-if datetime.datetime.today().weekday() == 0:
+def getRandomBibleVerse():
+    log("Getting bible verse")
     bibleUrl = 'http://labs.bible.org/api/?passage=random'
     obj = requests.get(bibleUrl)
-    js = obj.content.decode('utf-8')
+    log("Got bible verse")
 
+    js = obj.content.decode('utf-8')
     startIdx = js.index("<b>") + 3
     endIdx = js.index("</b>")
     verseStart = endIdx + 5
 
-    names = {"Coleman", "Hudson", "Peter", "Noah", "Phil", "Danny P", "Michael"}
+    content = js[startIdx:endIdx] + "\n"
+    content += js[verseStart:len(js) - 1]
+    return content
+
+
+log("Starting run")
+
+# Remind on Saturday
+if datetime.datetime.today().weekday() == 2:  # 5
+    content = "Remember to do your chores this weekend!\n\n"
+    content += getRandomBibleVerse()
+    sendGroupMeMessage(content, production_bot)
+    log("Sent chore reminder")
+
+
+# Test program on Thursdays
+if datetime.datetime.today().weekday() == 2:  # 3
+    sendGroupMeMessage("Still online!", test_bot)
+    log("Printed yep test")
+
+if datetime.datetime.today().weekday() == 2:  # 0
+    log("Sending chores...")
+
+    log("Reading csv")
+    names = {"Coleman", "Hudson", "Peter",
+             "Noah", "Phil", "Danny P", "Michael"}
     content = ""
     with open("chores.csv") as csv_file:
         reader = csv.reader(csv_file, delimiter=',')
@@ -31,9 +64,7 @@ if datetime.datetime.today().weekday() == 0:
         headers = []
         for row in reader:
             if line_count == 0:
-                # print(f'Column names are {", ".join(row)}')
                 headers = row
-                line_count += 1
             else:
                 check = False
                 for elem in row:
@@ -46,13 +77,13 @@ if datetime.datetime.today().weekday() == 0:
                     for i in range(len(row)):
                         if i != 0:
                             if headers[i] in names:
-                                content += headers[i] + "'s chore: " + row[i] + "\n"
-        # print(f'Processed {line_count} lines.')
-    url = 'https://api.groupme.com/v3/bots/post'
-    content += "Like the message if you did your chore!\n - Your favorite bot\n\n\n"
-    content += js[startIdx:endIdx] + "\n"
-    content += js[verseStart:len(js)  - 1]
-    print(content)
-    obj = {"text" : content, "bot_id" : "b623f516a520ffc3ca3a5aedec"}
-    x = requests.post(url, data = obj)
-    line_count += 1
+                                content += headers[i] + \
+                                    "'s chore: " + row[i] + "\n"
+            line_count += 1
+    content += "\nLike the message if you did your chore.\nHonor the Lord with your life and find joy in Him this week :)\n - Your favorite bot\n\n"
+    content += getRandomBibleVerse()
+    sendGroupMeMessage(content, production_bot)
+    log("Message sent!")
+
+log("Done!")
+print()
