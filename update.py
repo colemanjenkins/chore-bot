@@ -6,9 +6,13 @@ from datetime import date
 if datetime.datetime.today().weekday() == 5:
     content = "Remember to do your chores this weekend!\n\nBe still, and know that I am God"
     url = 'https://api.groupme.com/v3/bots/post'
+    # obj = {"text" : content, "bot_id" : "b623f516a520ffc3ca3a5aedec"}
     obj = {"text" : content, "bot_id" : "b623f516a520ffc3ca3a5aedec"}
     x = requests.post(url, data = obj)
     exit()
+
+if datetime.datetime.today().weekday() == 3:
+    print("yep")
 
 if datetime.datetime.today().weekday() == 0:
     bibleUrl = 'http://labs.bible.org/api/?passage=random'
