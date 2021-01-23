@@ -46,10 +46,9 @@ if datetime.datetime.today().weekday() == 2:  # 5
     log("Sent chore reminder")
 
 
-# Test program on Thursdays
-if datetime.datetime.today().weekday() == 2:  # 3
-    sendGroupMeMessage("Still online!", test_bot)
-    log("Printed yep test")
+# Send alive message every time it runs
+sendGroupMeMessage("Program ran", test_bot)
+log("Sent test message")
 
 if datetime.datetime.today().weekday() == 2:  # 0
     log("Sending chores...")
@@ -58,7 +57,7 @@ if datetime.datetime.today().weekday() == 2:  # 0
     names = {"Coleman", "Hudson", "Peter",
              "Noah", "Phil", "Danny P", "Michael"}
     content = ""
-    with open("chores.csv") as csv_file:
+    with open("/home/ubuntu/chore-bot/chores.csv") as csv_file:
         reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         headers = []
