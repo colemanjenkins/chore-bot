@@ -12,21 +12,26 @@ def log(msg):
 
 
 test_bot = "7708f26577f448fd1271f9727d"
-production_bot = "b623f516a520ffc3ca3a5aedec"
+production_bot = "7708f26577f448fd1271f9727d"
+# production_bot = "b623f516a520ffc3ca3a5aedec"
 
 
 def sendGroupMeMessage(msg, bot):
     url = 'https://api.groupme.com/v3/bots/post'
     # TEST!!
-    obj = {"text": msg, "bot_id": bot}
+    # obj = {"text": msg, "bot_id": bot}
+    obj = {"text": "Hello", "bot_id": bot}
+    print(bot)
     # obj = {"text": msg, "bot_id": test_bot}
     x = requests.post(url, data=obj)
+    print(x.json())
 
 
 def getRandomBibleVerse():
     log("Getting bible verse")
     bibleUrl = 'http://labs.bible.org/api/?passage=random'
     obj = requests.get(bibleUrl)
+    print(obj)
     log("Got bible verse")
 
     js = obj.content.decode('utf-8')
@@ -36,6 +41,7 @@ def getRandomBibleVerse():
 
     content = js[startIdx:endIdx] + "\n"
     content += js[verseStart:len(js) - 1]
+    return ""
     return content
 
 
