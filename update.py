@@ -4,8 +4,10 @@ import datetime
 from datetime import date
 
 # fileLocation = "/home/ubuntu/chore-bot/chores.csv"
-fileLocation = 'chores.csv'
+# fileLocation = 'chores.csv'
 
+# fileLocation = "/home/ubuntu/chore-bot/summer_data.csv"
+fileLocation = 'summer_data.csv'
 
 def log(msg):
     print(f"{str(datetime.datetime.now())}: {msg}")
@@ -20,7 +22,7 @@ def sendGroupMeMessage(msg, bot):
     # TEST!!
     obj = {"text": msg, "bot_id": bot}
     # obj = {"text": msg, "bot_id": test_bot}
-    x = requests.post(url, data=obj)
+    x = requests.post(url, json=obj)
 
 
 def getRandomBibleVerse():
@@ -52,6 +54,7 @@ if datetime.datetime.today().weekday() == 5:  # 5
     sendGroupMeMessage(content, production_bot)
     log("Sent chore reminder")
 
+# Remind on Friday
 if datetime.datetime.today().weekday() == 4:  # 4
     content = "Remember to settle up on Splitwise if you aren't already!\n\n"
     content += getRandomBibleVerse()
@@ -59,12 +62,13 @@ if datetime.datetime.today().weekday() == 4:  # 4
     log("Send Splitwise reminder")
 
 
+# Send chores on Monday
 if datetime.datetime.today().weekday() == 0:  # 0
     log("Sending chores...")
 
     log("Reading csv")
     names = {"Coleman", "Hudson", "Peter",
-             "Noah", "Phil", "Danny P", "Michael"}
+             "Noah", "Phil", "Danny P", "Michael", "Extra"}
     content = ""
     with open(fileLocation) as csv_file:
         reader = csv.reader(csv_file, delimiter=',')
