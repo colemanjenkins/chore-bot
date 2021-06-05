@@ -14,7 +14,8 @@ def log(msg):
 
 
 test_bot = "7708f26577f448fd1271f9727d"
-production_bot = "b623f516a520ffc3ca3a5aedec"
+production_bot = "7708f26577f448fd1271f9727d"
+# production_bot = "b623f516a520ffc3ca3a5aedec"
 
 
 def sendGroupMeMessage(msg, bot):
@@ -78,20 +79,16 @@ if datetime.datetime.today().weekday() == 0:  # 0
             if line_count == 0:
                 headers = row
             else:
-                check = False
-                for elem in row:
-                    if elem == '':
-                        check = True
-                if check:
-                    continue
-                day = row[0] + " 2021"
-                if datetime.datetime.strptime(day, '%b %d %Y').date() == date.today():
-                    for i in range(len(row)):
-                        if i != 0:
-                            if headers[i] in names:
-                                content += headers[i] + \
-                                    "'s chore: " + row[i] + "\n"
+                if row[0]:
+                    day = row[0] + " 2021"
+                    if datetime.datetime.strptime(day, '%b %d %Y').date() == date.today():
+                        for i in range(len(row)):
+                            if i != 0:
+                                if headers[i] in names:
+                                    content += headers[i] + \
+                                        "'s chore: " + row[i] + "\n"
             line_count += 1
+    content += "\nFor the summer, if someone's not there, other people just do it!"
     content += "\nLike the message if you did your chore.\nHonor the Lord with your life and find joy in Him this week :)\n - Your favorite bot\n\n"
     content += getRandomBibleVerse()
     sendGroupMeMessage(content, production_bot)
