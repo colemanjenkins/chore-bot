@@ -4,10 +4,10 @@ import datetime
 from datetime import date
 
 # fileLocation = "/home/ubuntu/chore-bot/chores.csv"
-# fileLocation = 'chores.csv'
+fileLocation = 'chores.csv'
 
 # fileLocation = "/home/ubuntu/chore-bot/summer_data.csv"
-fileLocation = 'summer_data.csv'
+# fileLocation = 'summer_data.csv'
 
 def log(msg):
     print(f"{str(datetime.datetime.now())}: {msg}")
@@ -63,32 +63,35 @@ if datetime.datetime.today().weekday() == 4:  # 4
     log("Send Splitwise reminder")
 
 
-# Send chores on Monday
-if datetime.datetime.today().weekday() == 0:  # 0
-    log("Sending chores...")
+# Send chores when the dates in the first column are the given day
+# if datetime.datetime.today().weekday() == 0:  # 0
+send_chore_details = False
+log("Parsing chores csv")
 
-    log("Reading csv")
-    names = {"Coleman", "Hudson", "Peter",
-             "Noah", "Phil", "Danny P", "Michael", "Extra"}
-    content = ""
-    with open(fileLocation) as csv_file:
-        reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
-        headers = []
-        for row in reader:
-            if line_count == 0:
-                headers = row
-            else:
-                if row[0]:
-                    day = row[0] + " 2021"
-                    if datetime.datetime.strptime(day, '%b %d %Y').date() == date.today():
-                        for i in range(len(row)):
-                            if i != 0:
-                                if headers[i] in names:
-                                    content += headers[i] + \
-                                        "'s chore: " + row[i] + "\n"
-            line_count += 1
-    content += "\nFor the summer, if someone's not there, other people just do it!"
+names = {"Coleman", "Hudson", "Peter",
+            "Noah", "Phil", "David", "Michael", "Wesley"}
+content = ""
+with open(fileLocation) as csv_file:
+    reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    headers = []
+    for row in reader:
+        if line_count == 0:
+            headers = row
+        else:
+            if row[0]:
+                day = row[0] + " " + str(date.today().year)
+                if datetime.datetime.strptime(day, '%b %d %Y').date() == date.today():
+                    send_chore_details = True
+                    for i in range(len(row)):
+                        if i != 0:
+                            if headers[i] in names:
+                                content += headers[i] + \
+                                    "'s chore: " + row[i] + "\n"
+        line_count += 1
+
+if send_chore_details:
+    log("Sending chores message")
     content += "\nLike the message if you did your chore.\nHonor the Lord with your life and find joy in Him this week :)\n - Your favorite bot\n\n"
     content += getRandomBibleVerse()
     sendGroupMeMessage(content, production_bot)
