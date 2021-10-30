@@ -1,6 +1,9 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 ### bots ###
+print(os.environ.get('MODE'))
 if os.environ.get('MODE') == 'PRODUCTION':
     test_bot = "7708f26577f448fd1271f9727d"
     chores_bot = "9405772b208b778b444749aa58"
