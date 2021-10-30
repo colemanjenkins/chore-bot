@@ -3,30 +3,16 @@ import requests
 import datetime
 from datetime import date
 
-# fileLocation = "/home/ubuntu/chore-bot/chores.csv"
-fileLocation = 'chores.csv'
+from defines import *
 
-# fileLocation = "/home/ubuntu/chore-bot/summer_data.csv"
-# fileLocation = 'summer_data.csv'
 
 def log(msg):
     print(f"{str(datetime.datetime.now())}: {msg}")
 
-
-test_bot = "7708f26577f448fd1271f9727d"
-reminders_bot = "7708f26577f448fd1271f9727d"
-chores_bot = "7708f26577f448fd1271f9727d"
-# chores_bot = "9405772b208b778b444749aa58"
-# reminders_bot = "b623f516a520ffc3ca3a5aedec"
-
-
 def sendGroupMeMessage(msg, bot):
     url = 'https://api.groupme.com/v3/bots/post'
-    # TEST!!
     obj = {"text": msg, "bot_id": bot}
-    # obj = {"text": msg, "bot_id": test_bot}
     x = requests.post(url, json=obj)
-
 
 def getRandomBibleVerse():
     log("Getting bible verse")
@@ -43,18 +29,15 @@ def getRandomBibleVerse():
     content += js[verseStart:len(js) - 1]
     return content
 
-
 log("Starting run")
 
 # Send alive message every time it runs
-sendGroupMeMessage("@Coleman Jenkins Program ran", test_bot)
+sendGroupMeMessage("Program ran", test_bot)
 log("Sent test message")
 
 # Remind on Saturday
 if datetime.datetime.today().weekday() == 5:  # 5
     content = "Remember to do your chores this weekend!"
-    # content = "Remember to do your chores this weekend!\n\n"
-    # content += getRandomBibleVerse()
     sendGroupMeMessage(content, reminders_bot)
     log("Sent chore reminder")
 
@@ -73,8 +56,6 @@ if datetime.datetime.today().weekday() == 4:  # 4
 send_chore_details = False
 log("Parsing chores csv")
 
-names = {"Coleman", "Hudson", "Peter",
-            "Noah", "Phil", "David", "Michael", "Wesley"}
 content = ""
 with open(fileLocation) as csv_file:
     reader = csv.reader(csv_file, delimiter=',')
